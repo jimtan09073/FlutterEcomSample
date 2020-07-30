@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
-import '../models/shopping.cart.model.dart';
 import '../widgets/cart.widget.dart';
 
 class WebAppBar extends StatefulWidget implements PreferredSizeWidget {
@@ -21,12 +20,6 @@ class WebAppBar extends StatefulWidget implements PreferredSizeWidget {
 
 class _WebAppBarState extends State<WebAppBar> {
   final _searchBoxController = TextEditingController();
-
-  @override
-  void dispose() {
-    super.dispose();
-    bloc.dispose();
-  }
 
   Widget build(BuildContext context) {
     return SafeArea(
@@ -79,49 +72,6 @@ class _WebAppBarState extends State<WebAppBar> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    // StreamBuilder<Object>(
-                    //   stream: bloc.hasUpdate,
-                    //   builder: (context, snapshot) {
-                    //     if (snapshot.hasData) {
-                    //       return Stack(
-                    //         children: [
-                    //           Positioned(
-                    //             top: 2,
-                    //             right: 5,
-                    //             child: Text('${snapshot.data}'),
-                    //           ),
-                    //           IconButton(
-                    //             icon: Icon(
-                    //               FontAwesomeIcons.shoppingCart,
-                    //             ),
-                    //             hoverColor: Colors.white,
-                    //             splashColor: Colors.white,
-                    //             onPressed: () {
-                    //               // Navigator.of(context).push(MaterialPageRoute(
-                    //               //   builder: (_) => ShoppingCartPage(),
-                    //               // ));
-                    //             },
-                    //           ),
-                    //         ],
-                    //       );
-                    //     } else {
-                    //       return IconButton(
-                    //         icon: Icon(
-                    //           FontAwesomeIcons.shoppingCart,
-                    //           // color: Colors.white,
-                    //         ),
-                    //         hoverColor: Colors.white,
-                    //         splashColor: Colors.white,
-                    //         onPressed: () {
-                    //           // Navigator.of(context).push(MaterialPageRoute(
-                    //           //   builder: (_) => ShoppingCartPage(),
-                    //           // ));
-                    //         },
-                    //       );
-                    //     }
-                    //   },
-                    // ),
-
                     // Consumer<CartService>(
                     //   builder: (context, cart, widget) => CartWidget(
                     //     widget: widget,
