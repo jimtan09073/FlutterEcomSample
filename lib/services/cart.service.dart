@@ -3,14 +3,65 @@ import 'package:dio/dio.dart';
 import '../models/cart.model.dart';
 
 class CartService with ChangeNotifier {
-  List<CartItem> _cartList = [];
+  // List<CartItem> _cartList = [];
+  Map<String, CartItem> _cart = {};
+
+  // int get cartListTotalCount {
+  //   return _cartList.isNotEmpty ? _cartList.length : 0;
+  // }
 
   int get cartListTotalCount {
-    return _cartList.length > 0 ? _cartList.length : 0;
+    var item = 0;
+    _cart.forEach((key, cartItem) {
+      item += cartItem.quantity;
+    });
+    return item;
   }
 
-  void addItem(String id, String name, double price, int qty, double subtotal ) {
-    _cartList.add(CartItem(id: id, name: name, price: price, quantity: qty, subtotal: subtotal));
+  int get cartLength {
+    return _cart.length;
+  }
+
+  // List<CartItem> get cartList {
+  //   return _cartList;
+  // }
+
+  Map<String, CartItem> get cartList {
+    return {..._cart};
+  }
+
+  // void addItem(String id, String name, double price, int qty) {
+  //   _cartList.add(CartItem(id: id, name: name, price: price, quantity: qty));
+  //   notifyListeners();
+  // }
+
+  void addItem(String id, String name, double price, int qty) {
+    if (_cart.containsKey(id)) {
+      _cart.update(
+        id,
+        (existingItem) => CartItem(
+          id: existingItem.id,
+          name: existingItem.name,
+          quantity: existingItem.quantity + 1,
+          price: existingItem.price,
+        ),
+      );
+    } else {
+      _cart.putIfAbsent(
+        id,
+        () => CartItem(id: id, name: name, quantity: qty, price: price),
+      );
+    }
+    // print(_cart[id].name);
+    notifyListeners();
+  }
+
+  void clearCart() {
+    // _cartList.clear();
+    // print(_cartList.length);
+    // notifyListeners();
+
+    _cart.clear();
     notifyListeners();
   }
 

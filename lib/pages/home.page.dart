@@ -14,23 +14,17 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  List<Product> _productList;
+  // List<Product> _productList;
 
   @override
   void initState() {
     super.initState();
-    ProductService.getProductList().then((Response resp) {
-      // Future.delayed(Duration.zero).then((value)  {
-      //   _populateData(resp.data['data']);
-      // }).whenComplete((){
-      //    Provider.of<ProductService>(context, listen: false).addProduct(_productList);
-      // });
-      _populateData(resp.data['data']);
-      Provider.of<ProductService>(context, listen: false)
-          .addProduct(_productList);
-    }, onError: (err) {
-      return print(err);
-    });
+    Provider.of<ProductService>(context, listen: false).getProductList().then(
+      (Response resp) {
+        Provider.of<ProductService>(context, listen: false)
+            .addProduct(resp.data['data']);
+      },
+    );
   }
 
   @override
@@ -60,61 +54,129 @@ class _HomePageState extends State<HomePage> {
                     //     builder: _buildGrid,
                     //   ),
                     // ),
+
+                    // Container(
+                    //   width: 1600,
+                    //   height: 800,
+                    //   child: GridView.builder(
+                    //     gridDelegate:
+                    //         new SliverGridDelegateWithFixedCrossAxisCount(
+                    //       crossAxisCount: 5,
+                    //       mainAxisSpacing: 5,
+                    //       crossAxisSpacing: 5,
+                    //     ),
+                    //     itemCount:
+                    //         context.watch<ProductService>().productList.length,
+                    //     itemBuilder: (context, index) {
+                    //       return Container(
+                    //         decoration: BoxDecoration(
+                    //           border: Border.all(
+                    //             width: 1,
+                    //             color: Colors.grey[300],
+                    //           ),
+                    //         ),
+                    //         padding: EdgeInsets.only(top: 5, bottom: 5),
+                    //         child: Column(
+                    //           children: [
+                    //             Expanded(
+                    //               child: SizedBox(
+                    //                 height: 200,
+                    //                 child: Image.asset(
+                    //                   'assets/images/alatreon.png',
+                    //                   fit: BoxFit.contain,
+                    //                 ),
+                    //               ),
+                    //             ),
+                    //             ListTile(
+                    //               leading: IconButton(
+                    //                 icon: Icon(Icons.add_shopping_cart),
+                    //                 onPressed: () {
+                    //                   Provider.of<CartService>(context,
+                    //                           listen: false)
+                    //                       .addItem('ab', 'ba', 12, 12, 12);
+                    //                 },
+                    //               ),
+                    //               trailing: IconButton(
+                    //                 icon: Icon(Icons.favorite),
+                    //                 onPressed: () {},
+                    //               ),
+                    //               title: Text(
+                    //                 context
+                    //                     .watch<ProductService>()
+                    //                     .productList[index]
+                    //                     .name,
+                    //                 textAlign: TextAlign.center,
+                    //               ),
+                    //             ),
+                    //           ],
+                    //         ),
+                    //       );
+                    //     },
+                    //   ),
+                    // ),
+
                     Container(
                       width: 1600,
                       height: 800,
-                      child: GridView.builder(
-                        gridDelegate:
-                            new SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 5,
-                          mainAxisSpacing: 5,
-                          crossAxisSpacing: 5,
-                        ),
-                        itemCount:
-                            context.watch<ProductService>().productList.length,
-                        itemBuilder: (context, index) {
-                          return Container(
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                width: 1,
-                                color: Colors.grey[300],
-                              ),
-                            ),
-                            padding: EdgeInsets.only(top: 5, bottom: 5),
-                            child: Column(
-                              children: [
-                                Expanded(
-                                  child: SizedBox(
-                                    height: 200,
-                                    child: Image.asset(
-                                      'assets/images/alatreon.png',
-                                      fit: BoxFit.contain,
+                      child: Consumer<ProductService>(
+                        builder: (context, product, widget) {
+                          return GridView.builder(
+                            gridDelegate:
+                                new SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: 5,
+                                    mainAxisSpacing: 5,
+                                    crossAxisSpacing: 5),
+                            itemCount: context
+                                .watch<ProductService>()
+                                .productList
+                                .length,
+                            itemBuilder: (context, index) {
+                              return Container(
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                    width: 1,
+                                    color: Colors.grey[300],
+                                  ),
+                                ),
+                                padding: EdgeInsets.only(top: 5, bottom: 5),
+                                child: Column(
+                                  children: [
+                                    Expanded(
+                                      child: SizedBox(
+                                        height: 200,
+                                        child: Image.asset(
+                                          'assets/images/alatreon.png',
+                                          fit: BoxFit.contain,
+                                        ),
+                                      ),
                                     ),
-                                  ),
+                                    ListTile(
+                                      leading: IconButton(
+                                        icon: Icon(Icons.add_shopping_cart),
+                                        onPressed: () {
+                                          Provider.of<CartService>(context,
+                                                  listen: false)
+                                              .addItem(
+                                            product.productList[index].id,
+                                            product.productList[index].name,
+                                            product.productList[index].price,
+                                            1,
+                                          );
+                                        },
+                                      ),
+                                      trailing: IconButton(
+                                        icon: Icon(Icons.favorite),
+                                        onPressed: () {},
+                                      ),
+                                      title: Text(
+                                        product.productList[index].name,
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                                ListTile(
-                                  leading: IconButton(
-                                    icon: Icon(Icons.add_shopping_cart),
-                                    onPressed: () {
-                                      Provider.of<CartService>(context,
-                                              listen: false)
-                                          .addItem('ab', 'ba', 12, 12, 12);
-                                    },
-                                  ),
-                                  trailing: IconButton(
-                                    icon: Icon(Icons.favorite),
-                                    onPressed: () {},
-                                  ),
-                                  title: Text(
-                                    context
-                                        .watch<ProductService>()
-                                        .productList[index]
-                                        .name,
-                                    textAlign: TextAlign.center,
-                                  ),
-                                ),
-                              ],
-                            ),
+                              );
+                            },
                           );
                         },
                       ),
@@ -135,57 +197,57 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _buildGrid(results) {
-    _populateData(results);
-    return GridView.builder(
-      gridDelegate: new SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 5, mainAxisSpacing: 5, crossAxisSpacing: 5),
-      itemCount: _productList.length,
-      itemBuilder: (context, index) {
-        return Container(
-          decoration: BoxDecoration(
-            border: Border.all(
-              width: 1,
-              color: Colors.grey[300],
-            ),
-          ),
-          padding: EdgeInsets.only(top: 5, bottom: 5),
-          child: Column(
-            children: [
-              Expanded(
-                child: SizedBox(
-                  height: 200,
-                  child: Image.asset(
-                    'assets/images/alatreon.png',
-                    fit: BoxFit.contain,
-                  ),
-                ),
-              ),
-              ListTile(
-                leading: IconButton(
-                  icon: Icon(Icons.add_shopping_cart),
-                  onPressed: () {
-                    print(results);
-                  },
-                ),
-                trailing: IconButton(
-                  icon: Icon(Icons.favorite),
-                  onPressed: () {},
-                ),
-                title: Text(
-                  _productList[index].name,
-                  textAlign: TextAlign.center,
-                ),
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }
+  // Widget _buildGrid(results) {
+  //   _populateData(results);
+  //   return GridView.builder(
+  //     gridDelegate: new SliverGridDelegateWithFixedCrossAxisCount(
+  //         crossAxisCount: 5, mainAxisSpacing: 5, crossAxisSpacing: 5),
+  //     itemCount: _productList.length,
+  //     itemBuilder: (context, index) {
+  //       return Container(
+  //         decoration: BoxDecoration(
+  //           border: Border.all(
+  //             width: 1,
+  //             color: Colors.grey[300],
+  //           ),
+  //         ),
+  //         padding: EdgeInsets.only(top: 5, bottom: 5),
+  //         child: Column(
+  //           children: [
+  //             Expanded(
+  //               child: SizedBox(
+  //                 height: 200,
+  //                 child: Image.asset(
+  //                   'assets/images/alatreon.png',
+  //                   fit: BoxFit.contain,
+  //                 ),
+  //               ),
+  //             ),
+  //             ListTile(
+  //               leading: IconButton(
+  //                 icon: Icon(Icons.add_shopping_cart),
+  //                 onPressed: () {
+  //                   print(results);
+  //                 },
+  //               ),
+  //               trailing: IconButton(
+  //                 icon: Icon(Icons.favorite),
+  //                 onPressed: () {},
+  //               ),
+  //               title: Text(
+  //                 _productList[index].name,
+  //                 textAlign: TextAlign.center,
+  //               ),
+  //             ),
+  //           ],
+  //         ),
+  //       );
+  //     },
+  //   );
+  // }
 
-  List<Product> _populateData(List<dynamic> results) {
-    return _productList =
-        results.map((product) => Product.fromJson(product)).toList();
-  }
+  // List<Product> _populateData(List<dynamic> results) {
+  //   return _productList =
+  //       results.map((product) => Product.fromJson(product)).toList();
+  // }
 }

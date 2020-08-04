@@ -7,25 +7,17 @@ class ProductService with ChangeNotifier {
   List<Product> _productList = [];
 
   List<Product> get productList {
-    return this._productList;
+    return _productList;
   }
 
-  String get test {
-    return 'hello world';
-  }
-
-  // void addProduct() {
-  //   _productList.add(Product(id: '123', name: 'tomato', price: 12, stock: 12));
-  //   notifyListeners();
-  // }
-
-  void addProduct(List<Product> list) {
+  void addProduct(List<dynamic>list) {
     // _productList.add(Product(id: '123', name: 'tomato', price: 12, stock: 12));
-    _productList.addAll(list);
+    List<Product> data = list.map((product) => Product.fromJson(product)).toList();
+    _productList.addAll(data);
     notifyListeners();
   }
 
-  static Future<Response> getProductList() async {
+  Future<Response> getProductList() async {
     try {
       Response resp = await Dio().get(
         'http://localhost:5000/item',

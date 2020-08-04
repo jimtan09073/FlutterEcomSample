@@ -4,6 +4,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
 import '../widgets/cart.widget.dart';
+import '../services/cart.service.dart';
 
 class WebAppBar extends StatefulWidget implements PreferredSizeWidget {
   final String title;
@@ -22,6 +23,7 @@ class _WebAppBarState extends State<WebAppBar> {
   final _searchBoxController = TextEditingController();
 
   Widget build(BuildContext context) {
+    var cart = context.watch<CartService>().cartList;
     return SafeArea(
       child: Container(
         height: 100,
@@ -105,7 +107,55 @@ class _WebAppBarState extends State<WebAppBar> {
                           ),
                           hoverColor: Colors.white,
                           splashColor: Colors.white,
-                          onPressed: () {},
+                          onPressed: () {
+                            showDialog(
+                              context: context,
+                              builder: (_) => new AlertDialog(
+                                title: ListTile(
+                                  leading: Text('Cart'),
+                                  trailing: IconButton(
+                                    icon: Icon(Icons.close),
+                                    onPressed: () =>
+                                        Navigator.of(context).pop(),
+                                  ),
+                                ),
+                                content: Container(
+                                  width: 500,
+                                  height: 300,
+                                  child: Consumer<CartService>(
+                                    builder: (ctx, cart, widget) {
+                                      return ListView.builder(
+                                        // scrollDirection: Axis.vertical,
+                                        shrinkWrap: true,
+                                        itemBuilder: (ctx, index) => Container(
+                                          child: ListTile(
+                                            title: Text(cart.cartList.values.toList()[index].name),
+                                            subtitle: Text(cart.cartList.values.toList()[index].price.toString()),
+                                            trailing: Text('QTY: ${cart.cartList.values.toList()[index].quantity}'),
+                                          ),
+                                        ),
+                                        itemCount: context.read<CartService>().cartLength
+                                      );
+                                    },
+                                  ),
+                                ),
+                                actions: [
+                                  FlatButton(
+                                    child: Text('CLEAR CART'),
+                                    onPressed: () {
+                                      context.read<CartService>().clearCart();
+                                    },
+                                  ),
+                                  FlatButton(
+                                    child: Text('CHECK OUT'),
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
                         ),
                       ],
                     ),

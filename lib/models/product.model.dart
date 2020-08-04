@@ -16,12 +16,12 @@ class Product {
   });
 
   Product.fromJson(Map<String, dynamic> json)
-      : id = json['id'],
+      : id = json['_id'],
         name = json['name'],
         desc = json['desc'],
         price = json['price'],
         stock = json['stock'];
 
   Map<String, dynamic> toJson() =>
-      {'id': id, 'name': name, 'desc': desc, 'price': price, 'stock': stock};
+      {'_id': id, 'name': name, 'desc': desc, 'price': price, 'stock': stock};
 }
